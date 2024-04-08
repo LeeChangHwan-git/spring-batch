@@ -38,32 +38,26 @@ public class HelloJobConfiguration {
     @Bean
     public Step helloStep1() {
         return new StepBuilder("helloStep1",jobRepository)
-                .tasklet(new Tasklet() {
-                    @Override
-                    public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+                .tasklet((contribution, chunkContext) -> {
 
-                        System.out.println("==========================");
-                        System.out.println(">> Hello Spring Batch!!");
-                        System.out.println("==========================");
+                    System.out.println("==========================");
+                    System.out.println(">> Hello Spring Batch!!");
+                    System.out.println("==========================");
 
-                        return RepeatStatus.FINISHED;
-                    }
+                    return RepeatStatus.FINISHED;
                 }, transactionManager)
                 .build();
     }
     @Bean
     public Step helloStep2() {
         return new StepBuilder("helloStep2",jobRepository)
-                .tasklet(new Tasklet() {
-                    @Override
-                    public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+                .tasklet((contribution, chunkContext) -> {
 
-                        System.out.println("==========================");
-                        System.out.println(">> Step2 Started");
-                        System.out.println("==========================");
+                    System.out.println("==========================");
+                    System.out.println(">> Step2 Started");
+                    System.out.println("==========================");
 
-                        return RepeatStatus.FINISHED;
-                    }
+                    return RepeatStatus.FINISHED;
                 }, transactionManager)
                 .build();
     }
