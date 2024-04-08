@@ -3,7 +3,8 @@ spring:
     active: local
   batch:
     job:
-      names: helloJob,job
+      name: helloJob
+      enabled: false
 
 
 ---
