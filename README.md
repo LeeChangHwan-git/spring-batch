@@ -46,3 +46,17 @@ org.springframework.batch.core.schema-*.sql
 참조 
 - 스프링배치 5.0 변경사항 https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-3.0-Migration-Guide#multiple-batch-jobs
 - 멀티잡 구현 https://velog.io/@hoyo1744/SpringBatch%EC%97%90%EC%84%9C-MultiJob-%EC%88%98%ED%96%89%ED%95%98%EA%B8%B0
+
+이전 버전들과 다르게 여러개의 job이 빈등록 되어 있을때 에러가 발생한다.
+```yaml
+spring:
+  batch:
+    job:
+      name: helloJob
+      enabled: true
+```
+> spring.batch.job.name 으로 여러개의 job 중 하나를 지정하여 수행할 수 있다.
+> > springbatch5 이전에 names: job1,job2 와 같은 문법이 수행되었지만, 지원안함
+
+> spring.batch.job.enabled: false 로 줘서 어플리케이션 기동시 모든 job을 수행하지 않을수도 있다.
+

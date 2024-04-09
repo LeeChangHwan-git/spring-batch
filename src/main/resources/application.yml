@@ -4,7 +4,7 @@ spring:
   batch:
     job:
       name: helloJob
-      enabled: false
+      enabled: true
 
 
 ---
