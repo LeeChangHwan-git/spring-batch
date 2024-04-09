@@ -41,7 +41,7 @@ org.springframework.batch.core.schema-*.sql
   - 메타테이블을 따로 생성해야한다.
 
 # DB Table
-
+![Spring Batch Meta-Data ERD.png](doc%2Fpic%2FSpring%20Batch%20Meta-Data%20ERD.png)
 # Multiple Job Support X
 참조 
 - 스프링배치 5.0 변경사항 https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-3.0-Migration-Guide#multiple-batch-jobs
