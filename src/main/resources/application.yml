@@ -1,9 +1,9 @@
 spring:
   profiles:
-    active: local
+    active: mysql
   batch:
     job:
-      name: helloJob
+      name: job
       enabled: true
 
 
@@ -21,6 +21,10 @@ spring:
   batch:
     jdbc:
       initialize-schema: embedded
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
 
 ---
 spring:
