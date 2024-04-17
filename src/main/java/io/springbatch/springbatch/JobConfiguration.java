@@ -11,17 +11,17 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
-public class DBJobConfiguration {
+public class JobConfiguration {
 
     private final JobRepository jobRepository;
     private final PlatformTransactionManager transactionManager;
 
-    public DBJobConfiguration(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+    public JobConfiguration(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
         this.jobRepository = jobRepository;
         this.transactionManager = transactionManager;
     }
 
-    @Bean(name = "dbJob")
+    @Bean
     public Job job() {
         return new JobBuilder("job", jobRepository)
                 .start(step1())
@@ -29,24 +29,23 @@ public class DBJobConfiguration {
                 .build();
     }
 
-    @Bean(name = "dbStep1")
+    @Bean
     public Step step1() {
         return new StepBuilder("step1", jobRepository)
                 .tasklet((contribution, chunkContext) -> {
-                    System.out.println(">> step1 start");
+                    System.out.println(">> Step1 Start!!");
                     return RepeatStatus.FINISHED;
                 }, transactionManager)
                 .build();
     }
 
-    @Bean(name = "dbStep2")
+    @Bean
     public Step step2() {
         return new StepBuilder("step2", jobRepository)
                 .tasklet((contribution, chunkContext) -> {
-                    System.out.println(">> step2 start");
+                    System.out.println(">> Step2 Start!!");
                     return RepeatStatus.FINISHED;
                 }, transactionManager)
                 .build();
     }
-
 }

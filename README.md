@@ -6,6 +6,9 @@
   * [스키마 DDL sql 파일 위치](#스키마-ddl-sql-파일-위치-)
   * [스키마 생성 설정](#스키마-생성-설정)
 * [DB Table](#db-table)
+* [Multiple Job Support X](#multiple-job-support-x)
+* [Job](#job)
+  * [기본 구현체](#기본-구현체)
 <!-- TOC -->
 # Mysql Docker로 띄우기
 ```
@@ -60,3 +63,16 @@ spring:
 
 > spring.batch.job.enabled: false 로 줘서 어플리케이션 기동시 모든 job을 수행하지 않을수도 있다.
 
+# Job
+> 1. 배치 계층 구조에서 가장 상위에 있는 개념   
+> 2. 하나의 배치작업 자체를 의미한다  
+> 3. Job Configuration을 통해 생성되는 객체단위로 배치작업을 전체적으로 설정하고 명세해 놓은 객체  
+> 4. 배치 Job을 구성하기 위한 최상위 인터페이스이며 스프링 배치가 기본 구현체 제공  
+> 5. 반드시 하나 이상의 Step으로 구성해야함
+
+## 기본 구현체
+1. SimpleJob
+   - 순차적으로 Step 실행
+2. FlowJob
+   - 특정 조건으로 Step 구성하여 실행
+   - Flow 객체를 실행시켜서 작업 진행
