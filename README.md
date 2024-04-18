@@ -76,3 +76,24 @@ spring:
 2. FlowJob
    - 특정 조건으로 Step 구성하여 실행
    - Flow 객체를 실행시켜서 작업 진행
+
+# JobInstance
+> 1. Job이 실행될때 생성되는 Job의 논리적 실행단위 객체
+> 2. 고유하게 식별 가능
+> 3. 테이블에 담기 위한 메타데이터 도메인이라고 생각하면 된다.
+> 4. Job의 설정과 구성은 동일하지만 Job이 실행되는 시점에 처리하는 내용은 다르기 때문에 Job의 실행을 구분해야 한다.
+>> - 하루에 한번식 배치 Job이 실행된다면 매일 실행되는 각각의 Job을 JobInstance로 표현한다.
+> 5. JobInstance 생성 및 실행
+>> - 처음 시작하는 Job + JobParameter(실제 Job을 실행시키는 JobLauncher의 파라미터)일 경우 JobInstance 생성
+>> - 이전과 동일한 Job + JobParameter 실행시 이미 존재하는 JobInstance 리턴
+>>> - 내부적으로 JobName + JobKey(JobParameter 해시값)을 가지고 JobInstance 객체를 얻음
+> 6. Job:JobInstance = 1:N
+
+## BATCH_JOB_INSTANCE 테이블 매핑
+- JOB_NAME(Job)과 JOB_KEY(JobParameter의 해시값)가 동일한 데이터는 중복 저장 불가
+  - 매번 파라미터가 다르게해서 Job을 돌려야 한다.
+
+## TEST
+동일 JOB_NAME, JOB_KEY를 사용할때와, 서로다른 JOB_NAME, JOB_KEY를 사용할때를 보기위해서 
+JobLauncher를 직접 구성해서 TEST 해본다.
+결과는 BATCH_JOB_EXECUTION_PARAMS, BATCH_JOB_INSTANCE 확인한다.

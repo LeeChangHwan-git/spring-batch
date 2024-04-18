@@ -11,42 +11,41 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
-public class DBJobConfiguration {
+public class JobInstanceConfiguration {
 
     private final JobRepository jobRepository;
     private final PlatformTransactionManager transactionManager;
 
-    public DBJobConfiguration(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+    public JobInstanceConfiguration(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
         this.jobRepository = jobRepository;
         this.transactionManager = transactionManager;
     }
 
-    @Bean(name = "dbJob")
-    public Job job() {
-        return new JobBuilder("job", jobRepository)
-                .start(step1())
-                .next(step2())
+//    @Bean(name = "jobInstanceJob")
+    @Bean
+    public Job jobInstanceJob() {
+        return new JobBuilder("jobInstanceJob", jobRepository)
+                .start(jobInstanceStep1())
+                .next(jobInstanceStep2())
                 .build();
     }
 
-    @Bean(name = "dbStep1")
-    public Step step1() {
-        return new StepBuilder("step1", jobRepository)
+    @Bean
+    public Step jobInstanceStep1() {
+        return new StepBuilder("jobInstanceStep1", jobRepository)
                 .tasklet((contribution, chunkContext) -> {
-                    System.out.println(">> DBJobConfiguration Step1 Start");
+                    System.out.println(">> jobInstanceStep1 start!!");
                     return RepeatStatus.FINISHED;
                 }, transactionManager)
                 .build();
     }
-
-    @Bean(name = "dbStep2")
-    public Step step2() {
-        return new StepBuilder("step2", jobRepository)
+    @Bean
+    public Step jobInstanceStep2() {
+        return new StepBuilder("jobInstanceStep2", jobRepository)
                 .tasklet((contribution, chunkContext) -> {
-                    System.out.println(">> DBJobConfiguration Step1 Start");
+                    System.out.println(">> jobInstanceStep2 start!!");
                     return RepeatStatus.FINISHED;
                 }, transactionManager)
                 .build();
     }
-
 }

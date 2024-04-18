@@ -40,7 +40,6 @@ public class HelloJobConfiguration {
                     System.out.println("==========================");
                     System.out.println(">> Hello Spring Batch!!");
                     System.out.println("==========================");
-
                     return RepeatStatus.FINISHED;
                 }, transactionManager)
                 .build();

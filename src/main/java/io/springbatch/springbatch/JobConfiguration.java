@@ -33,7 +33,7 @@ public class JobConfiguration {
     public Step step1() {
         return new StepBuilder("step1", jobRepository)
                 .tasklet((contribution, chunkContext) -> {
-                    System.out.println(">> Step1 Start!!");
+                    System.out.println(">> JobConfiguration Step1 Start!!");
                     return RepeatStatus.FINISHED;
                 }, transactionManager)
                 .build();
@@ -43,7 +43,7 @@ public class JobConfiguration {
     public Step step2() {
         return new StepBuilder("step2", jobRepository)
                 .tasklet((contribution, chunkContext) -> {
-                    System.out.println(">> Step2 Start!!");
+                    System.out.println(">> JobConfiguration Step2 Start!!");
                     return RepeatStatus.FINISHED;
                 }, transactionManager)
                 .build();
