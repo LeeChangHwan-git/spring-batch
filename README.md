@@ -162,3 +162,23 @@ java -jar spring-batch.jar 'name=aa date(date)=2024-04-21 seq(long)=2L age(doubl
 > 쉘별로 파라미터를 주는 방식의 차이가 조금 있는것같음
 > zsh라서 파라미터를 ''로 감싸주어야 에러가 나지 않는다.  
 > bash는 감싸지 않아도 잘 되는듯
+
+## JobExecution
+1. JobInstance에 대한 한번의 시도를 의미하는 객체
+2. Job 실행중 발생한 정보들을 저장하고 있는 객체
+
+### JobInstance와 관계
+> JobExecution 결과 COMPLETED면 JobInstance 실행완료로 동일 JobParameter로 재실행 불가  
+> FAILED면 재실행 가능
+> - JobParameter가 동일 값이더라도 JobInstance 실행 가능  
+>
+> COMPLETED가 될떄까지 하나의 JobInstance 내에서 여러번의 시도 가능
+
+### 프로세스
+![Spring JobExecution.png](doc%2Fpic%2FSpring%20JobExecution.png)
+
+### TEST
+Step에서 throw RuntimeException(); 이 후 여러번 실행시켜본다.
+JOB_INSTANCE는 1개
+JOB_EXECUTION* 테이블들의 ROW는 실행횟수만큼 되어있는것을 확인해볼 수 있다.
+(성공건으로 하면 1Row만 있어서 강제로 에러로 테스트함)
