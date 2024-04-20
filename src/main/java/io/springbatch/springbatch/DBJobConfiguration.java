@@ -23,7 +23,7 @@ public class DBJobConfiguration {
 
     @Bean(name = "dbJob")
     public Job job() {
-        return new JobBuilder("job", jobRepository)
+        return new JobBuilder("dbJob", jobRepository)
                 .start(step1())
                 .next(step2())
                 .build();
@@ -31,7 +31,7 @@ public class DBJobConfiguration {
 
     @Bean(name = "dbStep1")
     public Step step1() {
-        return new StepBuilder("step1", jobRepository)
+        return new StepBuilder("dbStep1", jobRepository)
                 .tasklet((contribution, chunkContext) -> {
                     System.out.println(">> DBJobConfiguration Step1 Start");
                     return RepeatStatus.FINISHED;
@@ -41,7 +41,7 @@ public class DBJobConfiguration {
 
     @Bean(name = "dbStep2")
     public Step step2() {
-        return new StepBuilder("step2", jobRepository)
+        return new StepBuilder("dbStep2", jobRepository)
                 .tasklet((contribution, chunkContext) -> {
                     System.out.println(">> DBJobConfiguration Step1 Start");
                     return RepeatStatus.FINISHED;

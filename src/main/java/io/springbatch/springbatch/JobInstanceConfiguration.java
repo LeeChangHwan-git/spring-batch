@@ -22,7 +22,7 @@ public class JobInstanceConfiguration {
     }
 
 //    @Bean(name = "jobInstanceJob")
-    @Bean
+    @Bean(name = "jobInstanceJob")
     public Job jobInstanceJob() {
         return new JobBuilder("jobInstanceJob", jobRepository)
                 .start(jobInstanceStep1())

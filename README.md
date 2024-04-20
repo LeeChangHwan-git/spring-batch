@@ -97,3 +97,68 @@ spring:
 동일 JOB_NAME, JOB_KEY를 사용할때와, 서로다른 JOB_NAME, JOB_KEY를 사용할때를 보기위해서 
 JobLauncher를 직접 구성해서 TEST 해본다.
 결과는 BATCH_JOB_EXECUTION_PARAMS, BATCH_JOB_INSTANCE 확인한다.
+
+# JobParameter
+1. 파라미터를 가진 도메인 객체
+2. 하나의 Job에 존재할 수 있는 여러개의 JobInstance를 구분하기 위한 용도
+3. JobInstance:JobParameter = 1:1
+4. BATCH_JOB_EXECUTION_PARAMS 테이블에 저장됨
+
+## 생성 및 바인딩
+1. 어플리케이션 실행 시 주입
+ - java -jar Batch.jar requestDate=20240420 -> JobParameter 객체화
+2. 코드로 생성
+ - JobParameterBuilder, DefaultJobParametersConverter
+3. SpEL 이용
+ - @Value("#{jobParameter[requestDate]}"), @JobScope,@StepScope 선언 필수
+
+## 작동원리
+![Spring JobParameter.png](doc%2Fpic%2FSpring%20JobParameter.png)
+- 3.0 버전 그림이므로 추후 수정한다.
+
+## JobParameters를 어떻게 사용가능한가.
+Step에서 new Tasklet 부분을 살펴보면
+```java
+@Configuration
+public class JobParameterConfiguration(){
+    // ...
+    public Step jobParameterStep1() {
+        return new StepBuilder("jobParameterStep2", jobRepository)
+                .tasklet((contribution, chunkContext) -> {
+                    System.out.println(">>> jobParameterStep1 Start!!");
+                    return RepeatStatus.FINISHED;
+                }, transactionManager)
+                .build();
+    }
+    // ...
+}
+```
+tasklet의 파라미터인 StepContribution contribution, ChunkContext chunkContext 에서 사용가능하다.
+> ex) StepContribution을 따라가보면 StepExecution 객체가 있고, 또 StepExecution을 따라가보면 
+> JobExecution이 있음. 이안에 가보면 JobParameters 객체가 초기화되는것을 알 수 있다.   
+> ChunkContext도 마찬가지이다.
+
+### contribution, chunkContext 차이
+```java
+JobParameters jobParameters = contribution.getStepExecution().getJobParameters();
+Map<String, Object> jobParameters2 = chunkContext.getStepContext().getJobParameters();
+```
+위에서 보면 서로 반환타입이 다른것을 알 수 있다.
+DEBUG 모드로 자세히 확인해보면 된다.
+
+> Type이 다르면 뭐가 다른걸까
+
+
+## jar로 만들어서 jobParameters 넘겨보기
+gradle > bootJar해서 jar파일을 생성한다.
+build 디렉토리에 생성되어 있다.
+
+터미널에서 jobParameter를 줘서 실행시켜본다.
+이거 할때 JobParameterTest의 @Component풀어줘서 기존 파라미터 초기화가 안먹도록 해주자.
+```shell
+java -jar spring-batch.jar 'name=aa date(date)=2024-04-21 seq(long)=2L age(double)=10.0'
+```
+> jobParameters를 줄때 spring batch에서 type인식할 수 있도록 (괄호)안에 type 명시한다.   
+> 쉘별로 파라미터를 주는 방식의 차이가 조금 있는것같음
+> zsh라서 파라미터를 ''로 감싸주어야 에러가 나지 않는다.  
+> bash는 감싸지 않아도 잘 되는듯
