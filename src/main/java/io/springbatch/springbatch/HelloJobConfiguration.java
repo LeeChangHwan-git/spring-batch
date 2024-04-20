@@ -24,7 +24,7 @@ public class HelloJobConfiguration {
         this.transactionManager = transactionManager;
     }
 
-    @Bean
+    @Bean(name = "helloJob")
     public Job helloJob(Step helloStep1, Step helloStep2) {
         return new JobBuilder("helloJob", jobRepository)
                 .start(helloStep1)
