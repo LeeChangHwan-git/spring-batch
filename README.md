@@ -9,6 +9,26 @@
 * [Multiple Job Support X](#multiple-job-support-x)
 * [Job](#job)
   * [기본 구현체](#기본-구현체)
+* [JobInstance](#jobinstance)
+  * [BATCH_JOB_INSTANCE 테이블 매핑](#batchjobinstance-테이블-매핑)
+  * [TEST](#test)
+* [JobParameter](#jobparameter)
+  * [생성 및 바인딩](#생성-및-바인딩)
+  * [작동원리](#작동원리)
+  * [JobParameters를 어떻게 사용가능한가.](#jobparameters를-어떻게-사용가능한가)
+    * [contribution, chunkContext 차이](#contribution-chunkcontext-차이)
+  * [jar로 만들어서 jobParameters 넘겨보기](#jar로-만들어서-jobparameters-넘겨보기)
+  * [JobExecution](#jobexecution)
+    * [JobInstance와 관계](#jobinstance와-관계)
+    * [프로세스](#프로세스)
+    * [TEST](#test-1)
+* [STEP](#step)
+  * [기본개념](#기본개념)
+  * [기본구현체](#기본구현체)
+    * [참고](#참고)
+  * [Tasklet 구현](#tasklet-구현)
+  * [Debug](#debug)
+* [출처](#출처)
 <!-- TOC -->
 # Mysql Docker로 띄우기
 ```
@@ -211,4 +231,5 @@ new Tasklet해서 익명클래스로 구현해도 되고, Custom Tasklet class�
 
 
 # 출처
-모든 내용과 사진자료는 inflearn 스프링배치(정수원) 기반입니다.
+모든 내용과 사진자료는 inflearn 스프링배치(정수원) 참고하여 작성하였습니다.
+https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%B0%B0%EC%B9%98
