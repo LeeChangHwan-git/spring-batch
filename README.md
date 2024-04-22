@@ -247,9 +247,9 @@ new Tasklet해서 익명클래스로 구현해도 되고, Custom Tasklet class�
 2. 하나의 Job에 다수 Step이면 각 StepExecution은 하나의 JobExecution을 부모로 가진다.
 
 ## 성공, 실패 케이스별 DB테이블 데이터
-
+![케이스별 테이블 데이터.png](doc%2Fpic%2F%EC%BC%80%EC%9D%B4%EC%8A%A4%EB%B3%84%20%ED%85%8C%EC%9D%B4%EB%B8%94%20%EB%8D%B0%EC%9D%B4%ED%84%B0.png)
 ## StepExecution 속성
-
+![StepExecution 속성.png](doc%2Fpic%2FStepExecution%20%EC%86%8D%EC%84%B1.png)
 ## TEST
 - 시나리오
   - JobInstance A, JobInstance B(동일 Job, 다른 파라미터)
@@ -257,7 +257,7 @@ new Tasklet해서 익명클래스로 구현해도 되고, Custom Tasklet class�
   - StepExecution이 기대한 값으로 업데이트 되었는지 확인해본다.
   
 - 프로세스(그림)
-
+![StepExecution Test.png](doc%2Fpic%2FStepExecution%20Test.png)
 
 
 # 출처
