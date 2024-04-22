@@ -1,9 +1,12 @@
 spring:
   profiles:
-    active: local
+    active: mysql
   batch:
     job:
-      names: helloJob,job
+      name: stepJob
+      enabled: true
+      # JobLauncher 직접구현시 자동으로 배치가 실행안되도록 false로 준다.
+#      enabled: false
 
 
 ---
@@ -20,6 +23,10 @@ spring:
   batch:
     jdbc:
       initialize-schema: embedded
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
 
 ---
 spring:
