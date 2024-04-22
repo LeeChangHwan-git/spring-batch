@@ -228,6 +228,36 @@ new Tasklet해서 익명클래스로 구현해도 되고, Custom Tasklet class�
 
 ## Debug
 
+# StepExecution
+## 기본 개념
+1. JobExecution 과 마찬가지로 Step에 대한 한번의 시도를 의미하는 객체
+2. Step 실행 중에 발생한 정보들을 저장하는 객체
+    - 시작, 종료시간, 상태, commit count, rollback count 등
+3. Step 실행마다 매번 생성됨
+4. Job 재시작시 성공한 Step은 실행안되고, 실패한 Step은 실행된다.
+    - 별도의 옵션을 통해서 성공 Step도 재시작시 실행되도록 할 수 있다.
+5. Step이 실제로 시작했을때만 생성된다
+    - 이전단계 Step이 실패해서 현재 Step이 실행안됐으면 StepExecution은 생성되지 않는다.
+6. JobExecution과의 관계
+    - StepExecution이 모두 정상이어야 JobExecution 정상 완료
+    - StepExecution 하나라도 실패시 JobExecution 실패
+
+## BATCH_STEP_EXECUTION 테이블과 매핑
+1. JobExecution:StepExecution = 1:M
+2. 하나의 Job에 다수 Step이면 각 StepExecution은 하나의 JobExecution을 부모로 가진다.
+
+## 성공, 실패 케이스별 DB테이블 데이터
+
+## StepExecution 속성
+
+## TEST
+- 시나리오
+  - JobInstance A, JobInstance B(동일 Job, 다른 파라미터)
+  - JobInstance B의 Job Execution 2번(첫번째 시도 FAILED, 두번째 COMPLETED)
+  - StepExecution이 기대한 값으로 업데이트 되었는지 확인해본다.
+  
+- 프로세스(그림)
+
 
 
 # 출처
