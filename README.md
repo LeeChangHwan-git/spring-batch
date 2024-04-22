@@ -182,3 +182,33 @@ Step에서 throw RuntimeException(); 이 후 여러번 실행시켜본다.
 JOB_INSTANCE는 1개
 JOB_EXECUTION* 테이블들의 ROW는 실행횟수만큼 되어있는것을 확인해볼 수 있다.
 (성공건으로 하면 1Row만 있어서 강제로 에러로 테스트함)
+
+# STEP
+## 기본개념
+1. Batch Job을 구성하는 독립적인 하나의 단계
+2. 실제 배치처리 정의하고 컨트롤 하는데 필요한 모든정보를 담고있는 도메인 객체
+3. 배치작업을 어떻게 구성하고 실행할 것인지 Job의 세부작업을 Task 기반으로 설정하고 명세해 놓은 객체
+4. 모든 Job은 하나 이상의 Step으로 구성됨
+
+## 기본구현체
+1. TaskletStep
+   - Tasklet 타입 구현체 제어
+2. PartitionStep
+   - 멀티쓰레드 방식으로 Step을 여러개로 분리해서 실행함
+3. JobStep
+   - Step 내에서 Job을 실행
+4. FlowStep
+   - Step 내에서 Flow를 실행
+
+### 참고
+![Step 구현체.png](doc%2Fpic%2FStep%20%EA%B5%AC%ED%98%84%EC%B2%B4.png)
+
+## Tasklet 구현
+new Tasklet해서 익명클래스로 구현해도 되고, Custom Tasklet class를 만들어서 실행해도 된다.
+
+## Debug
+
+
+
+# 출처
+모든 내용과 사진자료는 inflearn 스프링배치(정수원) 기반입니다.
