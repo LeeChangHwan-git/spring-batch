@@ -259,6 +259,17 @@ new Tasklet해서 익명클래스로 구현해도 되고, Custom Tasklet class�
 - 프로세스(그림)
 ![StepExecution Test.png](doc%2Fpic%2FStepExecution%20Test.png)
 
+# StepContribution
+## 기본개념
+1. Chunk Process의 변경사항을 버퍼링 한 후 StepExecution 상태를 업데이트하는 도메인 객체
+2. Chunk Commit 직전에 StepExecution의 apply 메소드를 호출하여 상태 업데이트함
+3. ExitStatus의 기본 종료코드 외 사용자정의 종료코드 생성해서 적용 가능함
+
+## 구조
+
+## 흐름도
+
+
 
 # 출처
 모든 내용과 사진자료는 inflearn 스프링배치(정수원) 참고하여 작성하였습니다.
