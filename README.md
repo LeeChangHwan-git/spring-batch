@@ -301,6 +301,20 @@ public class StepContribution implements Serializable {
 ## 흐름도
 ![StepContribution 흐름도.png](doc%2Fpic%2FStepContribution%20%ED%9D%90%EB%A6%84%EB%8F%84.png)
 
+# ExecutionContext
+## 기본개념
+1. 스프링배치 프레임워크에서 관리하는 key/value 컬렉션으로 Step,Job Execution 객체의 상태를 저장하는 공유객체
+2. 공유범위
+    - Job: 각 Job의 JobExecution에 저장되며 Job간 서로 공유 X, Job의 Step 간 공유됨
+    - Step: 각 Step의 StepExecution에 저장되며 Step간 서로 공유 안됨 
+
+## 테이블 맵핑
+연관테이블
+- BATCH_JOB_EXECUTION_CONTEXT
+- BATCH_STEP_EXECUTION_CONTEXT
+
+
 # 출처
 모든 내용과 사진자료는 inflearn 스프링배치(정수원) 참고하여 작성하였습니다.
 https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%B0%B0%EC%B9%98
+
