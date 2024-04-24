@@ -25,6 +25,11 @@ public class ExecutionContextTasklet1 implements Tasklet {
         if (stepExecutionContext.get("stepName") == null) {
             stepExecutionContext.put("stepName", stepName);
         }
+
+        System.out.println("jobName = " + jobExecutionContext.get("jobName"));
+        System.out.println("stepName = " + stepExecutionContext.get("stepName"));
+
+
         return RepeatStatus.FINISHED;
     }
 }

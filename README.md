@@ -266,10 +266,40 @@ new Tasklet해서 익명클래스로 구현해도 되고, Custom Tasklet class�
 3. ExitStatus의 기본 종료코드 외 사용자정의 종료코드 생성해서 적용 가능함
 
 ## 구조
+```java
+public class StepContribution implements Serializable {
+    // 성공적으로 read한 item 수
+    private volatile long readCount = 0;
+    // 성공적으로 write한 item 수
+    private volatile long writeCount = 0;   
+    // ItemProcessor에 의해 filtering 된 item 수
+    private volatile long filterCount = 0;
+    // 부모클래스인 StepExecution의 총 skip 횟수
+    private final long parentSkipCount;
 
+    private volatile long readSkipCount;
+
+    private volatile long writeSkipCount;
+
+    private volatile long processSkipCount;
+
+    private ExitStatus exitStatus = ExitStatus.EXECUTING;
+    // StepExecution 객체도 저장된다.
+    private final StepExecution stepExecution;
+
+    /**
+     * @param execution {@link StepExecution} the stepExecution used to initialize
+     * {@code skipCount}.
+     */
+    public StepContribution(StepExecution execution) {
+        this.stepExecution = execution;
+        this.parentSkipCount = execution.getSkipCount();
+    }
+    // ......
+}
+```
 ## 흐름도
-
-
+![StepContribution 흐름도.png](doc%2Fpic%2FStepContribution%20%ED%9D%90%EB%A6%84%EB%8F%84.png)
 
 # 출처
 모든 내용과 사진자료는 inflearn 스프링배치(정수원) 참고하여 작성하였습니다.
