@@ -312,7 +312,11 @@ public class StepContribution implements Serializable {
 연관테이블
 - BATCH_JOB_EXECUTION_CONTEXT
 - BATCH_STEP_EXECUTION_CONTEXT
+![ExecutionContext Table.png](doc%2Fpic%2FExecutionContext%20Table.png)
 
+## Job, Step별 공유관계 그림
+![Job Step별 ExecutionContext 공유관계.png](doc%2Fpic%2FJob%20Step%EB%B3%84%20ExecutionContext%20%EA%B3%B5%EC%9C%A0%EA%B4%80%EA%B3%84.png)
+**sorc보고 debug해서 각각 공유관계를 봐보면 이해하기 쉬움**
 
 # 출처
 모든 내용과 사진자료는 inflearn 스프링배치(정수원) 참고하여 작성하였습니다.
