@@ -318,6 +318,28 @@ public class StepContribution implements Serializable {
 ![Job Step별 ExecutionContext 공유관계.png](doc%2Fpic%2FJob%20Step%EB%B3%84%20ExecutionContext%20%EA%B3%B5%EC%9C%A0%EA%B4%80%EA%B3%84.png)
 **sorc보고 debug해서 각각 공유관계를 봐보면 이해하기 쉬움**
 
+# JobRepository
+## 기본 개념
+1. 배치작업 정보를 저장하는 저장소 역할
+2. 모든 meta data를 저장함
+
+## 설정
+1. 스프링 배치에서 자동으로 JobRepository가 빈으로 생성됨
+
+## BasicBatchConfigurer In Spring Batch 5.x
+BasicBatchConfigurer 삭제되어 DefaultBatchConfiguration 클래스를 확장하여 구현가능하다.
+
+> jobRepositoryFactoryBean.afterPropertiesSet();  
+> set한 속성값 외 필요속성값들을 자동으로 초기화해준다.
+
+## 개념 알아보기
+BatchAutoConfiguration 클래스는  
+> @ConditionalOnMissingBean(value = DefaultBatchConfiguration.class, annotation = EnableBatchProcessing.class)   
+
+해당 어노테이션에 의해서 DefaultBatchConfiguration 상속하여 빈등록이나, @EnableBatchProcessing 이 들어가면 실행이 안된다.  
+따라서 Job을 실행해주는 JobLauncher도 실행이 안됨. 따로 구현해줘야함
+
+
 # 출처
 모든 내용과 사진자료는 inflearn 스프링배치(정수원) 참고하여 작성하였습니다.
 https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%B0%B0%EC%B9%98
