@@ -1,5 +1,7 @@
 <!-- TOC -->
-* [Mysql Docker로 띄우기](#mysql-docker로-띄우기)
+* [출처](#출처)
+* [SpringBatch 환경준비](#springbatch-환경준비)
+  * [Mysql Docker로 띄우기](#mysql-docker로-띄우기)
 * [@EnableBatchProcessing](#enablebatchprocessing)
 * [BatchAutoConfiguration.java](#batchautoconfigurationjava)
 * [DB 스키마](#db-스키마)
@@ -28,15 +30,49 @@
     * [참고](#참고)
   * [Tasklet 구현](#tasklet-구현)
   * [Debug](#debug)
-* [출처](#출처)
+* [StepExecution](#stepexecution)
+  * [기본 개념](#기본-개념)
+  * [BATCH_STEP_EXECUTION 테이블과 매핑](#batchstepexecution-테이블과-매핑)
+  * [성공, 실패 케이스별 DB테이블 데이터](#성공-실패-케이스별-db테이블-데이터)
+  * [StepExecution 속성](#stepexecution-속성)
+  * [TEST](#test-2)
+* [StepContribution](#stepcontribution)
+  * [기본개념](#기본개념-1)
+  * [구조](#구조)
+  * [흐름도](#흐름도)
+* [ExecutionContext](#executioncontext)
+  * [기본개념](#기본개념-2)
+  * [테이블 맵핑](#테이블-맵핑)
+  * [Job, Step별 공유관계 그림](#job-step별-공유관계-그림)
+* [JobRepository](#jobrepository)
+  * [기본 개념](#기본-개념-1)
+  * [설정](#설정)
+  * [BasicBatchConfigurer In Spring Batch 5.x](#basicbatchconfigurer-in-spring-batch-5x)
+  * [개념 알아보기](#개념-알아보기)
+* [JobLauncher](#joblauncher)
+  * [기본 개념](#기본-개념-2)
+  * [동기/비동기 실행](#동기비동기-실행)
+    * [동기 실행](#동기-실행)
+      * [동기 프로세스](#동기-프로세스)
+    * [비동기 실행](#비동기-실행)
+      * [바동기 프로세스](#바동기-프로세스)
 <!-- TOC -->
-# Mysql Docker로 띄우기
+# 출처
+모든 내용과 사진자료는 inflearn 스프링배치(정수원) 참고하여 작성하였습니다.
+https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%B0%B0%EC%B9%98
+
+# SpringBatch 환경준비
+## Mysql Docker로 띄우기
 ```
 docker run --name mysql -e MYSQL_ROOT_PASSWORD=password -d -p 3306:3306 mysql:latest
 ```
 
 # @EnableBatchProcessing
-
+SpringBatch 5.x 이후 @EnableBatchProcessing을 필수적으로 쓰지 않아도 된다.
+> 참고
+> > spring-batch Reference Doc: https://docs.spring.io/spring-batch/reference/index.html
+> > spring-batch api Doc: https://docs.spring.io/spring-batch/docs/current/api/
+> 
 # BatchAutoConfiguration.java
 ```
 @ConditionalOnMissingBean(value = DefaultBatchConfiguration.class, annotation = EnableBatchProcessing.class)
@@ -339,8 +375,98 @@ BatchAutoConfiguration 클래스는
 해당 어노테이션에 의해서 DefaultBatchConfiguration 상속하여 빈등록이나, @EnableBatchProcessing 이 들어가면 실행이 안된다.  
 따라서 Job을 실행해주는 JobLauncher도 실행이 안됨. 따로 구현해줘야함
 
+# JobLauncher
+## 기본 개념
+1. 배치 Job을 실행시키는 역할
+2. (Job, JobParameters)
+3. 배치작업을 수행한 후 최종 client에게 JobExecution을 반환한다.
+4. 스프링 배치 구동시 JobLauncher 빈이 자동으로 생성된다.
+5. Job 실행
+    - JobLauncher.run(Job, JobParameters)
+    - JobLauncherApplicationRunner가 자동으로 JobLauncher을 실행시킨다.
 
-# 출처
-모든 내용과 사진자료는 inflearn 스프링배치(정수원) 참고하여 작성하였습니다.
-https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%B0%B0%EC%B9%98
+## 동기/비동기 실행
+### 동기 실행
+    - taskExecutor를 SyncTaskExecutor로 설정할 경우(기본 - SyncTaskExecutor)
+    - JobExecution을 획득하고 배치처리를 최종 완료한 이후 Client에거 JobExecution 반환
+    - 스케줄러에 의한 배치처리에 적합
+#### 동기 프로세스
+![동기Process.png](doc%2Fpic%2F%EB%8F%99%EA%B8%B0Process.png)
+
+### 비동기 실행
+    - taskExecutor가 SimpleAsyncTaskExecutor로 설정할 경우
+    - JobExecution을 획득한 후 Client에게 바로 JobExecution을 반환하고 배치처리를 완료함
+    - HTTP 요청에 의한 배치처리에 적합함
+#### 바동기 프로세스
+![비동기Process.png](doc%2Fpic%2F%EB%B9%84%EB%8F%99%EA%B8%B0Process.png)
+
+## TEST
+### Controller
+Client 입장에서 동기, 비동기 수행을 보기 위해 Controller 구현한다.
+```java
+@RestController
+public class JobLauncherController {
+
+    private final Map<String, Job> jobMap;
+    private final JobLauncher jobLauncher;
+    // 비동기 TaskExecutor 설정을 위한 변수
+    private final TaskExecutorJobLauncher taskExecutorJobLauncher;
+
+    // 비동기 TaskExecutor 설정을 위한 생성자
+    public JobLauncherController(Map<String, Job> jobMap, JobLauncher jobLauncher, DefaultBatchConfiguration defaultBatchConfiguration) {
+        this.jobMap = jobMap;
+        this.jobLauncher = jobLauncher;
+        taskExecutorJobLauncher = (TaskExecutorJobLauncher) defaultBatchConfiguration.jobLauncher();
+    }
+
+    // 동기 실행을 위한 생성자
+//    public JobLauncherController(Map<String, Job> jobMap, JobLauncher jobLauncher) {
+//        this.jobMap = jobMap;
+//        this.jobLauncher = jobLauncher;
+//    }
+
+    @PostMapping("/batch/sync")
+    public String launchSync(@RequestBody Member member) throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
+        JobParameters jobParameters = new JobParametersBuilder()
+                .addString("id", member.getId())
+                .addDate("date", new Date())
+                .toJobParameters();
+
+        Job job = jobMap.get("jobLauncherJob");
+        jobLauncher.run(job, jobParameters);
+        return "batch completed";
+    }
+
+    @PostMapping("/batch/async")
+    public String launchAsync(@RequestBody Member member) throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
+        JobParameters jobParameters = new JobParametersBuilder()
+                .addString("id", member.getId())
+                .addDate("date", new Date())
+                .toJobParameters();
+
+        Job job = jobMap.get("jobLauncherJob");
+        taskExecutorJobLauncher.setTaskExecutor(new SimpleAsyncTaskExecutor());
+        taskExecutorJobLauncher.run(job, jobParameters);
+
+        return "batch completed";
+    }
+}
+
+```
+
+### TEST & DEBUG
+동기방식과 비동기 방식은 TaskExcutor가 다른다.
+별도 설정이 없다면, TaskExecutor가 SyncTaskExecutor로 설정됨.
+비동기 설정을 하고싶다면 AsyncTaskExecutor로 설정해주고 실행한다.
+
+Client 입장에서 동기/비동기 테스트를 위해서 Step1에 Thread.sleep을 걸어준다.
+두 방식의 응답속도 차이를 비교한다.
+예상값: 싱크는 5초 슬립이 있으므로 슬립시간까지 더해진다.
+![sync async 응답속도 차이.png](doc%2Fpic%2Fsync%20async%20%EC%9D%91%EB%8B%B5%EC%86%8D%EB%8F%84%20%EC%B0%A8%EC%9D%B4.png)
+
+
+# 의문점
+## application.yml의 spring.job.name 은 어떤 기능이 있을까?
+실제 JobLauncher를 구현해서 Job을 실행할때, 'job'이라는 BeanId로 등록된 Job이 실행됨.   
+수동으로 BatchAutoConfiguration을 통한 job실행때만 작동하는 것인가?
 
