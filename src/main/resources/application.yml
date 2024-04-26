@@ -3,8 +3,8 @@ spring:
     active: mysql
   batch:
     job:
-      name: stepJob
-      enabled: true
+      name: jobLauncherJob
+      enabled: false
       # JobLauncher 직접구현시 자동으로 배치가 실행안되도록 false로 준다.
 #      enabled: false
 

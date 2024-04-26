@@ -1,4 +1,4 @@
-package io.springbatch.springbatch.basic;
+package io.springbatch.springbatch.basic.job;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -6,44 +6,53 @@ import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.repeat.RepeatStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
-public class JobInstanceConfiguration {
+public class HelloJobConfiguration {
+
 
     private final JobRepository jobRepository;
     private final PlatformTransactionManager transactionManager;
 
-    public JobInstanceConfiguration(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+    @Autowired
+    public HelloJobConfiguration(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
         this.jobRepository = jobRepository;
         this.transactionManager = transactionManager;
     }
 
-//    @Bean(name = "jobInstanceJob")
-    @Bean(name = "jobInstanceJob")
-    public Job jobInstanceJob() {
-        return new JobBuilder("jobInstanceJob", jobRepository)
-                .start(jobInstanceStep1())
-                .next(jobInstanceStep2())
+    @Bean(name = "helloJob")
+    public Job helloJob(Step helloStep1, Step helloStep2) {
+        return new JobBuilder("helloJob", jobRepository)
+                .start(helloStep1)
+                .next(helloStep2)
                 .build();
     }
 
     @Bean
-    public Step jobInstanceStep1() {
-        return new StepBuilder("jobInstanceStep1", jobRepository)
+    public Step helloStep1() {
+        return new StepBuilder("helloStep1",jobRepository)
                 .tasklet((contribution, chunkContext) -> {
-                    System.out.println(">> jobInstanceStep1 start!!");
+
+                    System.out.println("==========================");
+                    System.out.println(">> Hello Spring Batch!!");
+                    System.out.println("==========================");
                     return RepeatStatus.FINISHED;
                 }, transactionManager)
                 .build();
     }
     @Bean
-    public Step jobInstanceStep2() {
-        return new StepBuilder("jobInstanceStep2", jobRepository)
+    public Step helloStep2() {
+        return new StepBuilder("helloStep2",jobRepository)
                 .tasklet((contribution, chunkContext) -> {
-                    System.out.println(">> jobInstanceStep2 start!!");
+
+                    System.out.println("==========================");
+                    System.out.println(">> Step2 Started");
+                    System.out.println("==========================");
+
                     return RepeatStatus.FINISHED;
                 }, transactionManager)
                 .build();

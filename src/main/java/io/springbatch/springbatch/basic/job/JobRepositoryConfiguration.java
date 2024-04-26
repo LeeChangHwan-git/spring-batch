@@ -1,4 +1,4 @@
-package io.springbatch.springbatch.basic;
+package io.springbatch.springbatch.basic.job;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -11,37 +11,42 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
-public class StepConfiguration {
+public class JobRepositoryConfiguration {
+
     private final JobRepository jobRepository;
     private final PlatformTransactionManager transactionManager;
 
-    public StepConfiguration(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+    public JobRepositoryConfiguration(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
         this.jobRepository = jobRepository;
         this.transactionManager = transactionManager;
     }
 
     @Bean
-    public Job stepJob() {
-        return new JobBuilder("stepJob", jobRepository)
-                .start(stepJobStep1())
-                .next(stepJobStep2())
+    public Job jobRepositoryJob() {
+        return new JobBuilder("jobRepositoryJob", jobRepository)
+                .start(jobRepositoryStep1())
+                .next(jobRepositoryStep2())
+//                .listener(jobExecutionListener)
                 .build();
     }
 
     @Bean
-    public Step stepJobStep1() {
-        return new StepBuilder("stepJobStep1", jobRepository)
+    public Step jobRepositoryStep1() {
+        return new StepBuilder("jobRepositoryStep1", jobRepository)
                 .tasklet((contribution, chunkContext) -> {
-                    System.out.println(">>> stepJobStep1 start!!");
+                    System.out.println(">>> jobRepositoryStep1 start");
                     return RepeatStatus.FINISHED;
                 }, transactionManager)
                 .build();
     }
 
     @Bean
-    public Step stepJobStep2() {
-        return new StepBuilder("stepJobStep2", jobRepository)
-                .tasklet(new CustomTasklet(), transactionManager)
+    public Step jobRepositoryStep2() {
+        return new StepBuilder("jobRepositoryStep2", jobRepository)
+                .tasklet((contribution, chunkContext) -> {
+                    System.out.println(">>> jobRepositoryStep2 start");
+                    return RepeatStatus.FINISHED;
+                }, transactionManager)
                 .build();
     }
 }
