@@ -461,7 +461,8 @@ public class JobLauncherController {
 
 Client 입장에서 동기/비동기 테스트를 위해서 Step1에 Thread.sleep을 걸어준다.
 두 방식의 응답속도 차이를 비교한다.
-예상값: 싱크는 5초 슬립이 있으므로 슬립시간까지 더해진다.
+예상값: 싱크는 5초 슬립이 있으므로 슬립시간까지 더해진다.   
+
 ![sync async 응답속도 차이.png](doc%2Fpic%2Fsync%20async%20%EC%9D%91%EB%8B%B5%EC%86%8D%EB%8F%84%20%EC%B0%A8%EC%9D%B4.png)
 
 
