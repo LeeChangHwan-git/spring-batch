@@ -22,28 +22,28 @@ public class JobConfiguration {
     }
 
     @Bean
-    public Job job() {
-        return new JobBuilder("job", jobRepository)
-                .start(step1())
-                .next(step2())
+    public Job jobConfigurationJob() {
+        return new JobBuilder("jobConfigurationJob", jobRepository)
+                .start(jobConfigurationStep1())
+                .next(jobConfigurationStep2())
                 .build();
     }
 
     @Bean
-    public Step step1() {
-        return new StepBuilder("step1", jobRepository)
+    public Step jobConfigurationStep1() {
+        return new StepBuilder("jobConfigurationStep1", jobRepository)
                 .tasklet((contribution, chunkContext) -> {
-                    System.out.println(">> JobConfiguration Step1 Start!!");
+                    System.out.println(">> jobConfigurationStep1 Start!!");
                     return RepeatStatus.FINISHED;
                 }, transactionManager)
                 .build();
     }
 
     @Bean
-    public Step step2() {
-        return new StepBuilder("step2", jobRepository)
+    public Step jobConfigurationStep2() {
+        return new StepBuilder("jobConfigurationStep2", jobRepository)
                 .tasklet((contribution, chunkContext) -> {
-                    System.out.println(">> JobConfiguration Step2 Start!!");
+                    System.out.println(">> jobConfigurationStep2 Start!!");
                     return RepeatStatus.FINISHED;
                 }, transactionManager)
                 .build();

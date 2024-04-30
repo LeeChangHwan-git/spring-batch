@@ -471,3 +471,14 @@ Client 입장에서 동기/비동기 테스트를 위해서 Step1에 Thread.slee
 실제 JobLauncher를 구현해서 Job을 실행할때, 'job'이라는 BeanId로 등록된 Job이 실행됨.   
 수동으로 BatchAutoConfiguration을 통한 job실행때만 작동하는 것인가?
 
+# 배치 초기화
+## JobLauncherApplicationRunner
+1. BatchAutoConfiguration에서 생성됨
+2. ApplicationRunner의 구현체
+3. 어플리케이션 정상구동시 실행됨
+4. 기본적으로 Bean 등록된 모든 Job 실행시킴
+-> 아닌거같은데, ,,, 테스트 해볼것
+
+## BatchProperties
+1. Job이름, 스키마 초기화, table prefix 설정 가능
+
