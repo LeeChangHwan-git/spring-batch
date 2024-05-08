@@ -482,3 +482,23 @@ Client 입장에서 동기/비동기 테스트를 위해서 Step1에 Thread.slee
 ## BatchProperties
 1. Job이름, 스키마 초기화, table prefix 설정 가능
 
+# JobBuilder
+## 기본 개념
+1. Job을 구성하는 설정 조건에 따라 두개의 하위 빌더 클래스를 생성하고 Job생성을 위임한다.
+2. 실제 Job을 생성하는 것은 JobBuilder가 아니고 하단의 Builder이다.
+- SimpleJobBUilder
+  - SimpleJob 생성
+  - Job 실행 관련 여러 실행 API 제공
+- FlowJobBuilder
+  - FlowJob 생성
+  - Flow 실행과 관련된 여러 API 제공
+
+## 프로세스
+3.0 기준이므로 새로 만들어본다.
+
+## TEST
+SimpleJobBuilder.build() 되는 과정 debug
+FlowjobBuilder.build() 되는 과정 debug
+
+
+
