@@ -471,3 +471,59 @@ Client 입장에서 동기/비동기 테스트를 위해서 Step1에 Thread.slee
 실제 JobLauncher를 구현해서 Job을 실행할때, 'job'이라는 BeanId로 등록된 Job이 실행됨.   
 수동으로 BatchAutoConfiguration을 통한 job실행때만 작동하는 것인가?
 
+# 배치 초기화
+## JobLauncherApplicationRunner
+1. BatchAutoConfiguration에서 생성됨
+2. ApplicationRunner의 구현체
+3. 어플리케이션 정상구동시 실행됨
+4. 기본적으로 Bean 등록된 모든 Job 실행시킴
+-> 아닌거같은데, ,,, 테스트 해볼것
+
+## BatchProperties
+1. Job이름, 스키마 초기화, table prefix 설정 가능
+
+# JobBuilder
+## 기본 개념
+1. Job을 구성하는 설정 조건에 따라 두개의 하위 빌더 클래스를 생성하고 Job생성을 위임한다.
+2. 실제 Job을 생성하는 것은 JobBuilder가 아니고 하단의 Builder이다.
+- SimpleJobBUilder
+  - SimpleJob 생성
+  - Job 실행 관련 여러 실행 API 제공
+- FlowJobBuilder
+  - FlowJob 생성
+  - Flow 실행과 관련된 여러 API 제공
+
+## 프로세스
+3.0 기준이므로 새로 만들어본다.
+
+## TEST
+SimpleJobBuilder.build() 되는 과정 debug
+FlowjobBuilder.build() 되는 과정 debug
+
+# SimpleJob
+## 기본개념
+1. Step을 실행시키는 Job구현체로 SimpleJobBuilder에 의해 생성된다.
+2. 여러단계의 Step으로 구성되며 Step을 순차적으로 실행시킨다.
+3. 모든 Step이 정상적으로 완료되어야 Job이 완료된다.
+4. 맨마지막 Step의 BatchStatusrk Job의 최종 BatchStatus가 된다.
+
+## 흐름
+
+## API4
+```java
+@Configuration
+public class batchJobConfiguration() {
+    public Job batchJob() {
+        return new JobBuilder("batchJob", jobRepository)
+                .start(Step) // 처음 실행할 Step 설정, SimpleJobBuilder 반환
+                .next(Step) // 다음 실행할 Step 설정, 횟수제한 없으며 모든 next의 step이 종료되면 Job 종료
+                .incrementer(JobParametersIncrementer) // JobParameter값을 자동증가해주는 Incrementer 설정
+                .preventRestart(true) // Job 재시작 가능여부, 디폴트는 True
+                .validator(JobParameterValidator) // 검증용 Validator
+                .listener(JobExecutionListener) // Job 라이프사이클 특정시점 콜백받는 JobExecutionListner 설정
+                .build(); // SimpleJob 생성
+        }    
+}
+
+```
+
