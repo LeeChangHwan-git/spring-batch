@@ -500,5 +500,30 @@ Client 입장에서 동기/비동기 테스트를 위해서 Step1에 Thread.slee
 SimpleJobBuilder.build() 되는 과정 debug
 FlowjobBuilder.build() 되는 과정 debug
 
+# SimpleJob
+## 기본개념
+1. Step을 실행시키는 Job구현체로 SimpleJobBuilder에 의해 생성된다.
+2. 여러단계의 Step으로 구성되며 Step을 순차적으로 실행시킨다.
+3. 모든 Step이 정상적으로 완료되어야 Job이 완료된다.
+4. 맨마지막 Step의 BatchStatusrk Job의 최종 BatchStatus가 된다.
 
+## 흐름
+
+## API4
+```java
+@Configuration
+public class batchJobConfiguration() {
+    public Job batchJob() {
+        return new JobBuilder("batchJob", jobRepository)
+                .start(Step) // 처음 실행할 Step 설정, SimpleJobBuilder 반환
+                .next(Step) // 다음 실행할 Step 설정, 횟수제한 없으며 모든 next의 step이 종료되면 Job 종료
+                .incrementer(JobParametersIncrementer) // JobParameter값을 자동증가해주는 Incrementer 설정
+                .preventRestart(true) // Job 재시작 가능여부, 디폴트는 True
+                .validator(JobParameterValidator) // 검증용 Validator
+                .listener(JobExecutionListener) // Job 라이프사이클 특정시점 콜백받는 JobExecutionListner 설정
+                .build(); // SimpleJob 생성
+        }    
+}
+
+```
 
