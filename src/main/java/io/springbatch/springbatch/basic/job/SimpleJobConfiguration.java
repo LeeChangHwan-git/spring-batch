@@ -1,8 +1,8 @@
 package io.springbatch.springbatch.basic.job;
 
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.Step;
+import org.springframework.batch.core.*;
 import org.springframework.batch.core.job.builder.JobBuilder;
+import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.repeat.RepeatStatus;
@@ -26,6 +26,25 @@ public class SimpleJobConfiguration {
                 .start(simpleStep1())
                 .next(simpleStep2())
                 .next(simpleStep3())
+                .incrementer(new RunIdIncrementer())
+                .validator(new JobParametersValidator() {
+                    @Override
+                    public void validate(JobParameters parameters) throws JobParametersInvalidException {
+
+                    }
+                })
+                .listener(new JobExecutionListener() {
+                    @Override
+                    public void beforeJob(JobExecution jobExecution) {
+                        JobExecutionListener.super.beforeJob(jobExecution);
+                    }
+
+                    @Override
+                    public void afterJob(JobExecution jobExecution) {
+                        JobExecutionListener.super.afterJob(jobExecution);
+                    }
+                })
+                .preventRestart()
                 .build();
     }
 
@@ -44,6 +63,12 @@ public class SimpleJobConfiguration {
         return new StepBuilder("simpleStep2", jobRepository)
                 .tasklet((contribution, chunkContext) -> {
                     System.out.println(">>> simpleStep2 start!");
+                    System.out.println(">>> 강제로 Failed 설정 SET!");
+                    // StepExecution의 Status-> failed
+                    chunkContext.getStepContext().getStepExecution().setStatus(BatchStatus.FAILED);
+                    // StepExecution의 ExitStatus -> stopped
+                    // JobExecution Status -> filed, exit_code -> stopped
+                    contribution.setExitStatus(ExitStatus.STOPPED);
                     return RepeatStatus.FINISHED;
                 }, transactionManager)
                 .build();
