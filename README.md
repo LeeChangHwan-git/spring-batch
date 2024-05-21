@@ -524,6 +524,25 @@ public class batchJobConfiguration() {
                 .build(); // SimpleJob 생성
         }    
 }
-
 ```
 
+## start(), next()
+### start()
+1. 처음 실행 할 Step 설정으로 최초 한번 설정함
+2. 매개변수에 따라 종류별 JobBuilder가(SimpleJob, FlowJob, ...) 생성되고 반환된다.
+
+### next()
+1. 여러번 사용 가능
+
+## validator()
+1. Job실행에 필요한 파라미터(JobParameters)를 검증
+2. DefaultJobParametersValidator 구현체를 지원함
+3. 좀 더 복잡한 제약조건이 있다면 인터페이스 직접 구현 가능함
+
+### 구조
+JobParameters 값을 매개변수로 받아 검증함
+```java
+void validate(@Nullable JobParameters jobParameters)
+```
+
+### 흐름도
