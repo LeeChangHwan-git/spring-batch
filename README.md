@@ -546,3 +546,17 @@ void validate(@Nullable JobParameters jobParameters)
 ```
 
 ### 흐름도
+
+## preventRestart()
+1. Job의 재시작 여부를 설정
+2. 일반적으로 실패한 Job은 완료시까지 재실행 할 수 있다.
+3. false 처리하면 어떤 경우든 재시작할 수 없다.
+4. 재시작과 관련된 기능으로 처음시작과는 상관없음.
+
+## incrementer()
+1. JobParameters에서 필요한 값을 증가시켜 다음에 사용될 JobParameters 오브젝트 리턴
+2. 기존의 JobParameter 변경없이 Job을 여러번 시작하고자 할때
+3. RunIdIncrementer 구현체를 지원하면 인터페이스를 직접 구현할 수 있다.
+
+### 구조
+JobParameters getNext(@Nullalble JobParameters parameters);
