@@ -559,4 +559,10 @@ void validate(@Nullable JobParameters jobParameters)
 3. RunIdIncrementer 구현체를 지원하면 인터페이스를 직접 구현할 수 있다.
 
 ### 구조
+JobParametersIncrementer class
 JobParameters getNext(@Nullalble JobParameters parameters);
+
+### 실행
+.incrementer()로 설정해준다.
+매번 JobParameters 가 바뀐다.
+
