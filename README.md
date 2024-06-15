@@ -566,3 +566,8 @@ JobParameters getNext(@Nullalble JobParameters parameters);
 .incrementer()로 설정해준다.
 매번 JobParameters 가 바뀐다.
 
+## SimpleJob 아키텍처
+### SimpleJob 흐름도
+
+
+
