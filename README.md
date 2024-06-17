@@ -524,6 +524,50 @@ public class batchJobConfiguration() {
                 .build(); // SimpleJob 생성
         }    
 }
-
 ```
+
+## start(), next()
+### start()
+1. 처음 실행 할 Step 설정으로 최초 한번 설정함
+2. 매개변수에 따라 종류별 JobBuilder가(SimpleJob, FlowJob, ...) 생성되고 반환된다.
+
+### next()
+1. 여러번 사용 가능
+
+## validator()
+1. Job실행에 필요한 파라미터(JobParameters)를 검증
+2. DefaultJobParametersValidator 구현체를 지원함
+3. 좀 더 복잡한 제약조건이 있다면 인터페이스 직접 구현 가능함
+
+### 구조
+JobParameters 값을 매개변수로 받아 검증함
+```java
+void validate(@Nullable JobParameters jobParameters)
+```
+
+### 흐름도
+
+## preventRestart()
+1. Job의 재시작 여부를 설정
+2. 일반적으로 실패한 Job은 완료시까지 재실행 할 수 있다.
+3. false 처리하면 어떤 경우든 재시작할 수 없다.
+4. 재시작과 관련된 기능으로 처음시작과는 상관없음.
+
+## incrementer()
+1. JobParameters에서 필요한 값을 증가시켜 다음에 사용될 JobParameters 오브젝트 리턴
+2. 기존의 JobParameter 변경없이 Job을 여러번 시작하고자 할때
+3. RunIdIncrementer 구현체를 지원하면 인터페이스를 직접 구현할 수 있다.
+
+### 구조
+JobParametersIncrementer class
+JobParameters getNext(@Nullalble JobParameters parameters);
+
+### 실행
+.incrementer()로 설정해준다.
+매번 JobParameters 가 바뀐다.
+
+## SimpleJob 아키텍처
+### SimpleJob 흐름도
+
+
 
