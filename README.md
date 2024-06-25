@@ -570,4 +570,7 @@ JobParameters getNext(@Nullalble JobParameters parameters);
 ### SimpleJob 흐름도
 
 # StepBuilder
+어떤 api를 쓸때, 어떤 하위 Step이 생성되는지를 볼것. 종류별로
+
+
 
