@@ -542,7 +542,7 @@ public class batchJobConfiguration() {
 ### 구조
 JobParameters 값을 매개변수로 받아 검증함
 ```java
-void validate(@Nullable JobParameters jobParameters)
+void validate(@Nullable JobParameters jobParameters);
 ```
 
 ### 흐름도
