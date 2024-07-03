@@ -572,5 +572,41 @@ JobParameters getNext(@Nullalble JobParameters parameters);
 # StepBuilder
 어떤 api를 쓸때, 어떤 하위 Step이 생성되는지를 볼것. 종류별로
 
+# TaskletStep
+- 스프링 배치에서 제공하는 Step의 구현체로 Tasklet을 실행시키는 도메인 객체
+- RepeatTemplate를 사용
+- Task, Chunk 기반으로 나누어 Tasklet 실행
 
+## Task vs Chunk
+- chunk 기반
+  - 하나의 큰 덩어리를 n개씩 나눠서 실행한다는 의미
+  - 대량 처리를 하는 경우 효과적임
+  - ItemReader, ItemProcessor, ItemWriter를 사용하며 청크기반 전용 Tasklet인 ChunkOrientedTasklet 구현체가 제공된다.
+- Task 기반
+  - 단일 작업 기반으로 처리되는 것이 더 효율적인 경우
+  - 주로 Tasklet 구현체를 만들어서 사용
+  - 대량 처리의 경우 chunk기반에 비해 더 복잡한 구현이 필요하다.
 
+## 흐름도
+- chunk 기반
+- Task 기반
+
+## tasklet()
+- Tasklet 타입의 클래스를 설정한다.
+- Step 내에서 구성되고 실행되며, 단일 태스크 수행하기 위한 것
+- TaskletStep에 의해 반복적으로 수행되며 반환값에 따라 수행, 종료됨
+- RepeatStatus
+  - RepeatStatus.FINISHED: Tasklet 종료 RepeatStatus를 null로 반환하면 RepeatStatus.FINISHED로 해석됨
+  - RepeatStatus.CONTINUABLE: Tasklet 반복, FININSHED가 리턴되고나 실패예외 전까지 TaskletStep에 의해 while문 안에서 반복적으로 호출됨
+- Step에 오직 하나의 Tasklet 설정이 가능하며 두개 이상 설정했을 경우 마지막 설정한 객체가 실행된다.
+
+## startLimit()
+- Step의 실행 횟수 조정
+- Step마다 설정 가능
+- 설정 값을 초과실행하려면 StartLimitExceededException 발생
+
+## allowStartIfComplete()
+- 재시작 가능한 Job에서 Step의 이전 성공 여부와 상관없이 항상 Step을 실행하기 위한 설정
+- 실행마다 유효성을 검증하는 Step이나, 사전작업이 필요한 Step에서 사용
+
+### 흐름도
