@@ -610,3 +610,6 @@ JobParameters getNext(@Nullalble JobParameters parameters);
 - 실행마다 유효성을 검증하는 Step이나, 사전작업이 필요한 Step에서 사용
 
 ### 흐름도
+
+## TaskletStep 아키텍처
+
