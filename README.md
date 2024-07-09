@@ -613,3 +613,9 @@ JobParameters getNext(@Nullalble JobParameters parameters);
 
 ## TaskletStep 아키텍처
 
+## JobStep
+- Job에 속하는 Step 중 외부의 Job을 포함하고 있는 Step
+- 외부의 Job이 실패하면 해당 Step이 실패하므로 최종 Job 도 실패이다.
+- 모든 메타데이터는 기본 Job과 외부 Job 별로 각각 저장된다.
+- 커다란 시스템을 작은 모듈로 쪼개고 Job의 흐름을 관리하고자 할 때 사용할 수 있다.
+
