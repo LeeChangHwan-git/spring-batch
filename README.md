@@ -619,3 +619,19 @@ JobParameters getNext(@Nullalble JobParameters parameters);
 - 모든 메타데이터는 기본 Job과 외부 Job 별로 각각 저장된다.
 - 커다란 시스템을 작은 모듈로 쪼개고 Job의 흐름을 관리하고자 할 때 사용할 수 있다.
 
+## Job And Flow
+### 기본개념
+- Step을 순차적으로 구성하는 것이 아닌 특정 상태에 따라 흐름을 전환하도록 구성가능
+- FlowJobBuilder에 의해 생성된다
+  - Step이 실패하더라도 Job은 실패로 끝나지 않도록 해야하는 경우
+  - Step이 성공 했을 때 다음 실행할 Step을 구분해서 실행해야하는 경우
+  - 특정 Step은 실행되지 않게 구성해야하는 경우
+- 내부적으로 SimpleFlow 객체를 포함하고 있으며 Job실행시 호출된다.
+### SimpleJob VS Flowjob
+flowjob은 step 실패해도 성공처리된다는게 중요하다.
+
+### Transition
+#### 배치 상태 유형
+
+### JobExecutionDecider
+- Step의 ExitStatus 가 아닌 JobExecutionDecider의 FlowExecutionStatus 상태값을 새롭게 설정해서 반환
